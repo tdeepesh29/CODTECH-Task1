@@ -1,0 +1,136 @@
+/* Verilog Code for Half-adder */
+
+module half_adder(a_in,b_in,Sum,Carry);
+input a_in;
+input b_in;
+output Sum;
+output Carry;
+    assign Sum = a_in ^ b_in;
+    assign Carry = a_in & b_in;
+endmodule
+
+
+
+
+/* Verilog Code for Full-adder */
+
+module Full_Adeer(a_in,b_in,carry_in,Sum,Carry_out);
+input a_in,b_in;
+input carry_in;
+output Sum,Carry_out;
+
+assign Sum = a_in ^ b_in ^ carry_in;
+assign Carry_out = a_in & b_in | b_in & carry_in | a_in & carry_in;
+
+endmodule
+
+
+
+
+
+
+/* Testbench for half-adder */
+
+`timescale 1ns / 1ps
+
+module tb_half_adder;
+
+    // Inputs
+    reg a_in;
+    reg b_in;
+
+    // Outputs
+    wire Sum;
+    wire Carry;
+
+    // Instantiate the Unit Under Test (UUT)
+    half_adder uut (
+        .a_in(a_in), 
+        .b_in(b_in), 
+        .Sum(Sum), 
+        .Carry(Carry)
+    );
+
+    initial begin
+        // Initialize Inputs
+        a_in = 0;
+        b_in = 0;
+
+        // Wait 100 ns for global reset to finish
+        #100;
+        
+        // Apply test vectors
+        a_in = 0; b_in = 0; #10; // Sum = 0, Carry = 0
+        a_in = 0; b_in = 1; #10; // Sum = 1, Carry = 0
+        a_in = 1; b_in = 0; #10; // Sum = 1, Carry = 0
+        a_in = 1; b_in = 1; #10; // Sum = 0, Carry = 1
+
+        // Wait for some time and finish
+        #100;
+        $finish;
+    end
+      
+    initial begin
+        $monitor("At time %t, a_in = %b, b_in = %b -> Sum = %b, Carry = %b", $time, a_in, b_in, Sum, Carry);
+    end
+endmodule
+
+
+
+
+
+/* Testbench for Full-Adder */
+
+`timescale 1ns / 1ps
+
+module tb_full_adder;
+
+    // Inputs
+    reg a_in;
+    reg b_in;
+    reg carry_in;
+
+    // Outputs
+    wire Sum;
+    wire Carry_out;
+
+    // Instantiate the Unit Under Test (UUT)
+    Full_Adeer uut (
+        .a_in(a_in), 
+        .b_in(b_in), 
+        .carry_in(carry_in), 
+        .Sum(Sum), 
+        .Carry_out(Carry_out)
+    );
+
+    initial begin
+        // Initialize Inputs
+        a_in = 0;
+        b_in = 0;
+        carry_in = 0;
+
+        // Wait 100 ns for global reset to finish
+        #100;
+        
+        // Apply test vectors
+        a_in = 0; b_in = 0; carry_in = 0; #10; // Sum = 0, Carry_out = 0
+        a_in = 0; b_in = 0; carry_in = 1; #10; // Sum = 1, Carry_out = 0
+        a_in = 0; b_in = 1; carry_in = 0; #10; // Sum = 1, Carry_out = 0
+        a_in = 0; b_in = 1; carry_in = 1; #10; // Sum = 0, Carry_out = 1
+        a_in = 1; b_in = 0; carry_in = 0; #10; // Sum = 1, Carry_out = 0
+        a_in = 1; b_in = 0; carry_in = 1; #10; // Sum = 0, Carry_out = 1
+        a_in = 1; b_in = 1; carry_in = 0; #10; // Sum = 0, Carry_out = 1
+        a_in = 1; b_in = 1; carry_in = 1; #10; // Sum = 1, Carry_out = 1
+
+        // Wait for some time and finish
+        #100;
+        $finish;
+    end
+      
+    initial begin
+        $monitor("At time %t, a_in = %b, b_in = %b, carry_in = %b -> Sum = %b, Carry_out = %b", 
+                 $time, a_in, b_in, carry_in, Sum, Carry_out);
+    end
+endmodule
+
+
