@@ -1,0 +1,65 @@
+//Logic_Gates Verilog Code
+
+module logic_gates(a_in, b_in, sel, y_out);
+    input a_in;
+    input b_in;
+    output reg y_out;
+    input [2:0] sel;
+
+    always @(a_in or b_in)
+    begin
+        case (sel)
+            3'b000: y_out = a_in & b_in;
+            3'b001: y_out = ~(a_in & b_in);
+            3'b010: y_out = a_in | b_in;
+            3'b011: y_out = ~(a_in | b_in);
+            3'b100: y_out = ~a_in;
+            3'b101: y_out = a_in ^ b_in;
+            3'b110: y_out = ~(a_in ^ b_in);
+            default: y_out = a_in;
+        endcase
+    end
+endmodule
+
+
+//Logic_Gates TESTBENCH Code
+module logic_gates_tb;
+    // Inputs
+    reg a_in;
+    reg b_in;
+    reg [2:0] sel;
+
+    // Outputs
+    wire y_out;
+
+    // Instantiate the Unit Under Test (UUT)
+    logic_gates uut (
+        .a_in(a_in), 
+        .b_in(b_in), 
+        .sel(sel), 
+        .y_out(y_out)
+    );
+
+    initial begin
+        // Initialize Inputs
+        a_in = 0;
+        b_in = 0;
+        sel = 3'b000;
+
+        // Wait 100 ns for global reset to finish
+        #100;
+        
+        // Add stimulus here
+        a_in = 1; b_in = 0; sel = 3'b000; #10;
+        a_in = 1; b_in = 1; sel = 3'b001; #10;
+        a_in = 0; b_in = 1; sel = 3'b010; #10;
+        a_in = 1; b_in = 1; sel = 3'b011; #10;
+        a_in = 1; b_in = 0; sel = 3'b100; #10;
+        a_in = 0; b_in = 1; sel = 3'b101; #10;
+        a_in = 1; b_in = 1; sel = 3'b110; #10;
+        a_in = 0; b_in = 0; sel = 3'b111; #10;
+
+        // Finish simulation
+        $finish;
+    end
+endmodule
